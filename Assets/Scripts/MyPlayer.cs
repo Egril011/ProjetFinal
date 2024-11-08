@@ -14,6 +14,7 @@ public class MyPlayer : MonoBehaviour
     private const string MouseScrollInput = "Mouse ScrollWheel";
     private const string HorizontalInput = "Horizontal";
     private const string VerticalInput = "Vertical";
+    public bool CanMove = true;
 
     private void Start()
     {
@@ -29,6 +30,10 @@ public class MyPlayer : MonoBehaviour
 
     private void Update()
     {
+        if (!CanMove)
+        {
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -46,6 +51,12 @@ public class MyPlayer : MonoBehaviour
 
     private void HandleCameraInput()
     {
+        if (!CanMove)
+        {
+            Vector3 CenterCamera = new Vector3(0f, 0f, 0f);
+            return;
+        }
+
         // Create the look input vector for the camera
         float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput);
         float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput);
@@ -71,6 +82,11 @@ public class MyPlayer : MonoBehaviour
 
     private void HandleCharacterInput()
     {
+        if (!CanMove)
+        {
+            return;
+        }
+
         PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
         // Build the CharacterInputs struct

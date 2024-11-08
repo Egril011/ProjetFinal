@@ -1,5 +1,6 @@
 using KinematicCharacterController;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -33,11 +34,14 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
 
     private Vector3 _moveInputVector;
     private Vector3 _lookInputVector;
+    [SerializeField] Animator _animator;
+    public bool CanMove = true;
 
     private void Start()
     {
         // Assign to motor
         Motor.CharacterController = this;
+        _animator = GetComponentInChildren<Animator>();
     }
 
     /// <summary>
@@ -45,6 +49,13 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     /// </summary>
     public void SetInputs(ref PlayerCharacterInputs inputs)
     {
+        if (!CanMove)
+        {
+            _moveInputVector = Vector3.zero;
+            _lookInputVector = Vector3.zero;
+            return;
+        }
+
         // Clamp input
         Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
 
@@ -76,6 +87,11 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     /// </summary>
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
+        if (!CanMove)
+        {
+           return;
+        }
+
         if (_lookInputVector != Vector3.zero && OrientationSharpness > 0f)
         {
             // Smoothly interpolate from current to target look direction
@@ -93,6 +109,12 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     /// </summary>
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
+        if (!CanMove)
+        {
+            currentVelocity = Vector3.zero;
+            return;
+        }
+
         Vector3 targetMovementVelocity = Vector3.zero;
         if (Motor.GroundingStatus.IsStableOnGround)
         {
@@ -182,7 +204,9 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
             var interacteble = hitInfo.collider.GetComponent<IInteractable>();
             if (interacteble != null)
             {
+                _animator.SetTrigger("Interaction");
                 interacteble.Interact();
+
             }
         }
         else
