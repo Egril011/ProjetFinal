@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class Subtitle : MonoBehaviour
 {
-    [SerializeField] Image background;
-    [SerializeField] TMP_Text subtitle;
+    [SerializeField] private Image background;
+    [SerializeField] private TMP_Text subtitle;
 
     private void Start()
     {

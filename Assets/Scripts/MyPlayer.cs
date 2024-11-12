@@ -14,7 +14,7 @@ public class MyPlayer : MonoBehaviour
     private const string MouseScrollInput = "Mouse ScrollWheel";
     private const string HorizontalInput = "Horizontal";
     private const string VerticalInput = "Vertical";
-    public bool CanMove = true;
+    public bool CanMove {  get; set; } = true;
 
     private void Start()
     {
@@ -57,8 +57,8 @@ public class MyPlayer : MonoBehaviour
         }
 
         // Create the look input vector for the camera
-        float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput);
-        float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput);
+        float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput) * MenuGame.PlayerSensibility;
+        float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput) * MenuGame.PlayerSensibility;
         Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
 
         // Prevent moving the camera while the cursor isn't locked

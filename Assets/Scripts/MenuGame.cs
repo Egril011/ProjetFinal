@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class MenuGame : MonoBehaviour
 {
+    [SerializeField] private Image _viseur;
+
     [SerializeField] private Slider _sliderSensibility;
     [SerializeField] private TMP_Text _sensibilityNb;
     [SerializeField] private TMP_Text _sensibilityText;
@@ -19,6 +21,8 @@ public class MenuGame : MonoBehaviour
     [SerializeField] private Button _saveButton;
     [SerializeField] private Button _exitButton;
     
+    private MyPlayer _player;
+    private Flashlight _flashlight;
     private float _maxValue = 100.0f;
 
     public static float PlayerSensibility { get; private set; }
@@ -27,6 +31,8 @@ public class MenuGame : MonoBehaviour
     public void Start()
     {
         SettingsMenu(false);
+        _player = FindAnyObjectByType<MyPlayer>();
+        _flashlight = FindAnyObjectByType<Flashlight>();
     }
 
     public void Update()
@@ -38,6 +44,11 @@ public class MenuGame : MonoBehaviour
 
             _saveButton.onClick.AddListener(SaveSensibility);
             _exitButton.onClick.AddListener(ExitGame);
+
+            _player.CanMove = false;
+            _flashlight.enabled = false;
+
+            _viseur.enabled = false;
         }
         
         _sensibilityNb.text = Mathf.RoundToInt((_sliderSensibility.value * _maxValue)).ToString();
@@ -60,6 +71,11 @@ public class MenuGame : MonoBehaviour
         _saveButton.onClick.RemoveListener(SaveSensibility);
         _exitButton.onClick.RemoveListener(ExitGame);
 
+        _player.CanMove = true;
+        _flashlight.enabled = true;
+
+        _viseur.enabled = true;
+
     }
 
     private void ExitGame()
@@ -70,12 +86,12 @@ public class MenuGame : MonoBehaviour
     private void SettingsMenu(bool isTrue)
     {
         _sliderSensibility.gameObject.SetActive(isTrue);
-        _sensibilityNb.enabled = isTrue;
-        _sensibilityText.enabled = isTrue;
+        _sensibilityNb.gameObject.SetActive(isTrue);
+        _sensibilityText.gameObject.SetActive(isTrue);
 
         _sliderVolume.gameObject.SetActive(isTrue);
-        _volumeNb.enabled = isTrue;
-        _volumeText.enabled = isTrue;
+        _volumeNb.gameObject.SetActive(isTrue);
+        _volumeText.gameObject.SetActive(isTrue);
 
         _saveButton.gameObject.SetActive(isTrue);
         _exitButton.gameObject.SetActive(isTrue);

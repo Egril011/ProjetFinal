@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Flashlight : MonoBehaviour, IInteractable
 {
-    Light flashlight;
-    [SerializeField] Camera cam;
-    float _intesity = 100; 
-    bool hasPickedUp;
+    private Light flashlight;
+    [SerializeField] private Camera cam;
+    private float _intesity = 100; 
+    private bool HasPickedUp {get; set;}
 
     private void Start()
     {
@@ -17,11 +17,10 @@ public class Flashlight : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        if (hasPickedUp)
+        if (HasPickedUp)
         {
             if (Input.GetKey(KeyCode.F))
             {
-                Debug.Log(2);
                 flashlight.enabled = true;
                 flashlight.intensity = _intesity;
 
@@ -56,7 +55,7 @@ public class Flashlight : MonoBehaviour, IInteractable
     {
         if (flashlight != null)
         {
-            hasPickedUp = true;
+            HasPickedUp = true;
             var meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.enabled = false;
 
