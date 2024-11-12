@@ -37,7 +37,6 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Cursor.lockState = CursorLockMode.Locked;
             Character.RaycastTryToInteract();
         }
 

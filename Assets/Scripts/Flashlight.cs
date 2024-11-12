@@ -7,41 +7,48 @@ public class Flashlight : MonoBehaviour, IInteractable
     [SerializeField] Camera cam;
     float _intesity = 100; 
     bool hasPickedUp;
-    float _timer = 0; 
 
     private void Start()
     {
         cam = Camera.main;
         flashlight = cam.GetComponentInChildren<Light>(); 
+        flashlight.enabled = false;
     }
 
     private void Update()
     {
-        if (hasPickedUp && Input.GetKey(KeyCode.F))
+        if (hasPickedUp)
         {
-            flashlight.enabled = true;
-            RaycastHit hit;
-
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
+            if (Input.GetKey(KeyCode.F))
             {
-                if (hit.collider.CompareTag("Walls"))
-                {
-                    Debug.Log(hit.distance);
+                Debug.Log(2);
+                flashlight.enabled = true;
+                flashlight.intensity = _intesity;
 
-                    if (hit.distance < 1)
+                RaycastHit hit;
+
+                if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
+                {
+                    if (hit.collider.CompareTag("Walls"))
                     {
-                        flashlight.intensity = 0;
-                    }
-                    else
-                    {
-                        flashlight.intensity = _intesity;
+                        Debug.Log(hit.distance);
+
+                        if (hit.distance < 1)
+                        {
+                            flashlight.intensity = 0;
+                        }
+                        else
+                        {
+                            flashlight.intensity = _intesity;
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            flashlight.enabled = false;
+            else
+            {
+                flashlight.enabled = false;
+            }
+
         }
     }
 
