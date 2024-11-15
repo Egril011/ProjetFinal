@@ -57,8 +57,8 @@ public class MyPlayer : MonoBehaviour
         }
 
         // Create the look input vector for the camera
-        float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput) * MenuGame.PlayerSensibility;
-        float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput) * MenuGame.PlayerSensibility;
+        float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput) * Sensibility.PlayerSensibility;
+        float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput) * Sensibility.PlayerSensibility;
         Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
 
         // Prevent moving the camera while the cursor isn't locked

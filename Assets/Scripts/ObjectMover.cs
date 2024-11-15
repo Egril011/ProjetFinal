@@ -13,7 +13,7 @@ public class ObjectMover : MonoBehaviour, IInteractable
     private string _mouseVertical = "Mouse Y";
     private bool _isLookingObject;
     
-    public void Start()
+    private void Start()
     {
         _myPlayer = FindAnyObjectByType<MyPlayer>();
         _subtitle = FindAnyObjectByType<Subtitle>();
