@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Volume : MonoBehaviour
 {
-    [SerializeField] public Slider _sliderVolume;
+    [SerializeField] public Slider SliderVolume;
     [SerializeField] private TMP_Text _volumeNb;
     [SerializeField] private TMP_Text _volumeText;
     private float _maxValue = 100.0f;
@@ -21,7 +21,7 @@ public class Volume : MonoBehaviour
 
     private void Start()
     {
-        _sliderVolume.value = PlayerVolume / _maxValue;
+        SliderVolume.value = PlayerVolume / _maxValue;
         _volumeNb.text = PlayerVolume.ToString();
     }
 
@@ -38,7 +38,7 @@ public class Volume : MonoBehaviour
 
     public void HideORShowVolumeSetting(bool isVisible)
     {
-        _sliderVolume.gameObject.SetActive(isVisible);
+        SliderVolume.gameObject.SetActive(isVisible);
         _volumeNb.gameObject.SetActive(isVisible);
         _volumeText.gameObject.SetActive(isVisible);
     }

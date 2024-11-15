@@ -12,11 +12,7 @@ public class Menu : MonoBehaviour, OptionMenu
     private Volume _volume;
     private Sensibility _sensibility;
     private MyPlayer _player;
-    private Flashlight _flashlight;
     private LoadScene _loadScene;
-
-    private int volume;
-    private int sensitibility;
 
     private void Start()
     {
@@ -24,6 +20,7 @@ public class Menu : MonoBehaviour, OptionMenu
         _volume = FindAnyObjectByType<Volume>();
         _player = FindAnyObjectByType<MyPlayer>();
         _loadScene = FindAnyObjectByType<LoadScene>();
+
         HideORShowSettings(true);
     }
 
@@ -32,6 +29,9 @@ public class Menu : MonoBehaviour, OptionMenu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             HideORShowSettings(false);
+
+            _sensibility.SliderSensibility.onValueChanged.AddListener(_sensibility.SensibilityTextUpdate);
+            _volume.SliderVolume.onValueChanged.AddListener(_volume.VolumeTextUpdate);
         }
 
     }
@@ -53,7 +53,7 @@ public class Menu : MonoBehaviour, OptionMenu
         _volume.HideORShowVolumeSetting(!isVisible);
 
         if (isVisible)
-        { 
+        {
             _saveButton.onClick.RemoveAllListeners();
             _exitButton.onClick.RemoveAllListeners();
             Cursor.lockState = CursorLockMode.Locked;
@@ -68,11 +68,10 @@ public class Menu : MonoBehaviour, OptionMenu
 
     public void SaveSettings()
     {
-        _sensibility.SaveSensibility(sensitibility);
-        _volume.SaveVolume(volume);
+        _sensibility.SaveSensibility(_sensibility.SliderSensibility.value);
+        _volume.SaveVolume(_volume.SliderVolume.value);
 
         HideORShowSettings(true);
-
     }
 }
         

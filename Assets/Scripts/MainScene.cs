@@ -36,7 +36,7 @@ public class MainScene : MonoBehaviour, OptionMenu
 
         _sensibility.SliderSensibility.onValueChanged.AddListener(_sensibility.SensibilityTextUpdate);
 
-        _volume._sliderVolume.onValueChanged.AddListener(_volume.VolumeTextUpdate); 
+        _volume.SliderVolume.onValueChanged.AddListener(_volume.VolumeTextUpdate); 
     }
     public void ExitSettings()
     {
@@ -75,6 +75,6 @@ public class MainScene : MonoBehaviour, OptionMenu
     public void SaveSettings()
     {
         _sensibility.SaveSensibility(_sensibility.SliderSensibility.value);
-        _volume.SaveVolume(_volume._sliderVolume.value);
+        _volume.SaveVolume(_volume.SliderVolume.value);
     }
 }

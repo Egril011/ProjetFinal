@@ -3,64 +3,62 @@ using UnityEngine;
 
 public class Flashlight : MonoBehaviour, IInteractable
 {
-    private Light flashlight;
-    [SerializeField] private Camera cam;
-    private float _intesity = 100; 
-    private bool HasPickedUp {get; set;}
-
+    [SerializeField] private Camera _cam;
+    [SerializeField] private LayerMask _wallLayer;
+    [SerializeField] private int _distanceFromWalls = 1;
+    private Light _flashlight;
+    private float _intesity = 100;
+    private bool _flaslighOn = false;
+    public bool HasPickedUp { get; private set; }
+    
     private void Start()
     {
-        cam = Camera.main;
-        flashlight = cam.GetComponentInChildren<Light>(); 
-        flashlight.enabled = false;
+        _cam = Camera.main;
+        _flashlight = _cam.GetComponentInChildren<Light>();
+        _flashlight.enabled = false;
     }
 
     private void Update()
     {
         if (HasPickedUp)
         {
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                flashlight.enabled = true;
-                flashlight.intensity = _intesity;
+                _flaslighOn = !_flaslighOn;
+                _flashlight.enabled = _flaslighOn;
 
-                RaycastHit hit;
-
-                if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
+                if (_flaslighOn)
                 {
-                    if (hit.collider.CompareTag("Walls"))
-                    {
-                        Debug.Log(hit.distance);
-
-                        if (hit.distance < 1)
-                        {
-                            flashlight.intensity = 0;
-                        }
-                        else
-                        {
-                            flashlight.intensity = _intesity;
-                        }
-                    }
+                    _flashlight.intensity = _intesity;
                 }
             }
-            else
-            {
-                flashlight.enabled = false;
-            }
 
+            if (_flaslighOn)
+            {
+                WallsDetection();
+            }
         }
     }
 
     public void Interact()
     {
-        if (flashlight != null)
-        {
-            HasPickedUp = true;
-            var meshRenderer = GetComponent<MeshRenderer>();
-            meshRenderer.enabled = false;
+        HasPickedUp = true;
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
+    }
 
-            var collider = GetComponent<Collider>();
-            collider.enabled = false;
+    private void WallsDetection()
+    {
+        RaycastHit hit;
+        Ray ray = new Ray(_cam.transform.position, _cam.transform.forward);
+        
+        if (Physics.Raycast(ray, out hit, _distanceFromWalls, _wallLayer))
+        {
+            _flashlight.enabled = false;
         }
     }
+
 }
+
+               
+

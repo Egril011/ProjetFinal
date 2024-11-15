@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08671bc1fa03953428ca32dadf8b2830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sliderSensibility: {fileID: 1856457798}
+  SliderSensibility: {fileID: 1856457798}
   _sensibilityNb: {fileID: 538320380}
   _sensibilityText: {fileID: 1371093149}
 --- !u!114 &474696577
