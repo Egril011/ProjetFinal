@@ -35,6 +35,8 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     private Vector3 _moveInputVector;
     private Vector3 _lookInputVector;
     [SerializeField] Animator _animator;
+    private RaycastHit hitInfoPlayer;
+
 
     private void Start()
     {
@@ -179,12 +181,11 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     internal void RaycastTryToInteract()
     {
         var cam = Camera.main;
-        RaycastHit hitInfo;
         //Raycast ou Linecast
 
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfo, InteractionDistance))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfoPlayer, InteractionDistance))
         {
-            var interacteble = hitInfo.collider.GetComponent<IInteractable>();
+            var interacteble = hitInfoPlayer.collider.GetComponent<IInteractable>();
             if (interacteble != null)
             {
                 _animator.SetTrigger("Interaction");
