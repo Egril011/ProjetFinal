@@ -8,6 +8,7 @@ public class Fridge : MonoBehaviour, IInteractable
     [SerializeField] private Animator _animatorFridge;
     [SerializeField] private Light _bottomLight;
     [SerializeField] private Light _topLight;
+
     private bool _hasOpenTopDoorFridge;
     private bool _hasOpenBottomDoorFridge;
     
@@ -21,13 +22,9 @@ public class Fridge : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        if (_hasOpenTopDoorFridge)
+        if (_hasOpenTopDoorFridge || _hasOpenBottomDoorFridge)
         {
-            CheckTopDoor();
-        }
-        else if (_hasOpenBottomDoorFridge)
-        {
-            CheckBottomDoor();
+            CheckDoor();
         }
     }
 
@@ -39,90 +36,99 @@ public class Fridge : MonoBehaviour, IInteractable
         {
             if (hit.collider == _topDoor)
             {
-                OpenTopDoor();
-                _hasOpenTopDoorFridge = true;
-                _topLight.enabled = true;
+                HandleTopDoor();
             }
             else if (hit.collider == _bottomDoor)
             {
-                OpenBottomDoor();
-                _hasOpenBottomDoorFridge = true;
-                _bottomLight.enabled = true;
+                HandleBottomDoor();
             }
         }
+    }
+
+    private void HandleTopDoor()
+    {
+        if (_hasOpenBottomDoorFridge)
+        {
+            CloseBottomDoor();
+        }
+        if (!_hasOpenTopDoorFridge)
+        {
+            OpenTopDoor();
+        }
+        else
+        {
+            CloseTopDoor();
+        }
+
+    }
+
+    private void HandleBottomDoor()
+    {
+        if (_hasOpenTopDoorFridge)
+        {
+            CloseTopDoor();
+        }
+
+        if (!_hasOpenBottomDoorFridge)
+        {
+            OpenBottomDoor();
+        }
+        else
+        {
+            CloseBottomDoor();
+        }
+        
+    }
+
+    private void CloseTopDoor()
+    {
+        _animatorFridge.SetTrigger("CloseTopDoor");
+        _hasOpenTopDoorFridge = false;
+        _topLight.enabled = false;
+        _topDoor.enabled = true;
+    }
+
+    private void CloseBottomDoor()
+    {
+        _animatorFridge.SetTrigger("CloseBottomDoor");
+        _hasOpenBottomDoorFridge = false;
+        _bottomLight.enabled = false;
+        _bottomDoor.enabled = true;
     }
 
     private void OpenTopDoor()
     {
         _animatorFridge.SetTrigger("OpenTopDoor");
+        _hasOpenTopDoorFridge = true;
+        _topLight.enabled = true;
+        _topDoor.enabled = false;
     }
 
     private void OpenBottomDoor()
     {
         _animatorFridge.SetTrigger("OpenBottomDoor");
-    }
+        _hasOpenBottomDoorFridge = true;
+        _bottomLight.enabled = true;
+        _bottomDoor.enabled = false;
+    } 
 
-    private void CheckTopDoor()
+    private void CheckDoor()
     {
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 5f))
+        
+        if (Physics.Raycast(ray,out RaycastHit hit, 5))
         {
-            if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Fridge"))
+            Debug.Log(hit.collider.name);
+            Debug.DrawLine(ray.origin, hit.point,Color.red, 10000);
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Fridge"))
             {
-                _animatorFridge.SetTrigger("CloseTopDoor");
-                _hasOpenTopDoorFridge = false;
-                _topLight.enabled = false;
-            }
-            else if (Physics.Raycast(ray, out RaycastHit hit1))
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (hit1.collider == _bottomDoor)
-                    {
-                        _animatorFridge.SetTrigger("CloseTopDoor");
-                        _hasOpenTopDoorFridge = false;
-                        _bottomLight.enabled = false;
-
-                        _animatorFridge.SetTrigger("OpenBottomDoor");
-                        _hasOpenBottomDoorFridge = true;
-                        _bottomLight.enabled = true;
-                    }
-
-                }
+               return;
             }
         }
-                
-    }
-
-    private void CheckBottomDoor()
-    {
-        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        else
         {
-            if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Fridge"))
-            {
-                _animatorFridge.SetTrigger("CloseBottomDoor");
-                _hasOpenBottomDoorFridge = false;
-                _bottomLight.enabled = false;
-            }
-            else if (Physics.Raycast(ray, out RaycastHit hit1))
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (hit1.collider == _topDoor)
-                    {
-                        _animatorFridge.SetTrigger("CloseBottomDoor");
-                        _hasOpenBottomDoorFridge = false;
-                        _bottomLight.enabled = false ;
-
-                        _animatorFridge.SetTrigger("OpenTopDoor");
-                        _hasOpenTopDoorFridge = true;
-                        _topLight.enabled = true;
-                    }
-                }
-            }
+            CloseBottomDoor();
+            CloseTopDoor();
         }
     }
 }
