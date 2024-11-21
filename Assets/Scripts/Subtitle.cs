@@ -12,9 +12,6 @@ public class Subtitle : MonoBehaviour
 
     private void Start()
     {
-        subtitle = GetComponentInChildren<TMP_Text>();
-        background = GetComponent<Image>();
-
         subtitle.enabled = false;
         background.enabled = false;
     }

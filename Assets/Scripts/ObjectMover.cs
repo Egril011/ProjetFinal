@@ -16,8 +16,8 @@ public class ObjectMover : MonoBehaviour, IInteractable
     private void Start()
     {
         _myPlayer = FindAnyObjectByType<MyPlayer>();
-        _subtitle = FindAnyObjectByType<Subtitle>();
         _camera = FindAnyObjectByType<Camera>();
+        _subtitle = FindAnyObjectByType<Subtitle>();
     }
 
     public void Update()
@@ -26,18 +26,18 @@ public class ObjectMover : MonoBehaviour, IInteractable
         {
             MoveObject();
             _subtitle.Message("Appuie sur \"Space\" pour quitter");
-        }
 
-        if (Input.GetKey(KeyCode.Space))
-        {
-            _subtitle.HideMessage();
+            if (Input.GetKey(KeyCode.Space))
+            {
+                _subtitle.HideMessage();
 
-            _isLookingObject = false;
-            _myPlayer.CanMove = true;
+                _isLookingObject = false;
+                _myPlayer.CanMove = true;
 
-            gameObject.transform.rotation = _originalRotation;
-            gameObject.transform.position = _originalPosition;
-            gameObject.transform.localScale = _originalLocalScale;
+                gameObject.transform.rotation = _originalRotation;
+                gameObject.transform.position = _originalPosition;
+                gameObject.transform.localScale = _originalLocalScale;
+            }
         }
     }
 
@@ -51,13 +51,13 @@ public class ObjectMover : MonoBehaviour, IInteractable
         _myPlayer.CanMove = false;
         _isLookingObject = true;
        
-        gameObject.transform.localScale = new Vector3(3, 3, 3);   
+        gameObject.transform.localScale = new Vector3(5, 5, 5);   
     }
 
     void MoveObject()
     {
-        float mouseX = Input.GetAxisRaw(_mouseHorizontal);
-        float mouseY = Input.GetAxisRaw(_mouseVertical);
+        float mouseX = Input.GetAxisRaw(_mouseHorizontal) * Sensibility.PlayerSensibility;
+        float mouseY = Input.GetAxisRaw(_mouseVertical) * Sensibility.PlayerSensibility;
 
         gameObject.transform.Rotate(Vector3.up, mouseX, Space.World);    
         gameObject.transform.Rotate(Vector3.right, mouseY, Space.Self);  

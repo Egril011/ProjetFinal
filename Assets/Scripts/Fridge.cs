@@ -15,7 +15,6 @@ public class Fridge : MonoBehaviour, IInteractable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        _animatorFridge = GetComponent<Animator>();
         _bottomLight.enabled = false;
         _topLight.enabled = false;
     }

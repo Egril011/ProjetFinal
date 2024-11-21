@@ -8,7 +8,7 @@ public class Flashlight : MonoBehaviour, IInteractable
     [SerializeField] private int _distanceFromWalls = 1;
     private Light _flashlight;
     private float _intesity = 100;
-    private bool _flaslighOn = false;
+    public bool FlaslightOn  { get; private set; }
     public bool HasPickedUp { get; private set; }
     
     private void Start()
@@ -24,16 +24,16 @@ public class Flashlight : MonoBehaviour, IInteractable
         {
             if (Input.GetKeyDown(KeyCode.F))
             {
-                _flaslighOn = !_flaslighOn;
-                _flashlight.enabled = _flaslighOn;
+                FlaslightOn = !FlaslightOn;
+                _flashlight.enabled = FlaslightOn;
 
-                if (_flaslighOn)
+                if (FlaslightOn)
                 {
                     _flashlight.intensity = _intesity;
                 }
             }
 
-            if (_flaslighOn)
+            if (FlaslightOn)
             {
                 WallsDetection();
             }
