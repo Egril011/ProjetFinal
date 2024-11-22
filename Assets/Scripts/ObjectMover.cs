@@ -8,7 +8,7 @@ public class ObjectMover : MonoBehaviour, IInteractable
     private Quaternion _originalRotation;
     private Vector3 _originalPosition;
     private Vector3 _originalLocalScale;
-    private Camera _camera;
+    [SerializeField] private Camera _camera;
     private string _mouseHorizontal = "Mouse X";
     private string _mouseVertical = "Mouse Y";
     private bool _isLookingObject;
@@ -16,8 +16,8 @@ public class ObjectMover : MonoBehaviour, IInteractable
     private void Start()
     {
         _myPlayer = FindAnyObjectByType<MyPlayer>();
-        _camera = FindAnyObjectByType<Camera>();
         _subtitle = FindAnyObjectByType<Subtitle>();
+
     }
 
     public void Update()
@@ -46,7 +46,12 @@ public class ObjectMover : MonoBehaviour, IInteractable
         _originalRotation = gameObject.transform.rotation;
         _originalPosition = gameObject.transform.position;
         _originalLocalScale = gameObject.transform.localScale;
-        Debug.Log($"Camera Position: {_camera.transform.position}");
+        print(_camera.transform.forward);
+        Vector3 newPos = _camera.transform.position + _camera.transform.forward;
+        newPos.y -= 0.5f;
+        gameObject.transform.position = newPos;
+
+
 
         _myPlayer.CanMove = false;
         _isLookingObject = true;
