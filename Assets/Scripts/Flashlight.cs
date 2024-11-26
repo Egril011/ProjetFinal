@@ -8,9 +8,9 @@ public class Flashlight : MonoBehaviour, IInteractable
     [SerializeField] private int _distanceFromWalls = 1;
     private Light _flashlight;
     private float _intesity = 100;
-    public bool FlaslightOn  { get; private set; }
+    public bool FlaslightOn { get; private set; }
     public bool HasPickedUp { get; private set; }
-    
+
     private void Start()
     {
         _cam = Camera.main;
@@ -51,7 +51,7 @@ public class Flashlight : MonoBehaviour, IInteractable
     {
         RaycastHit hit;
         Ray ray = new Ray(_cam.transform.position, _cam.transform.forward);
-        
+
         if (Physics.Raycast(ray, out hit, _distanceFromWalls, _wallLayer))
         {
             _flashlight.enabled = false;
@@ -60,5 +60,5 @@ public class Flashlight : MonoBehaviour, IInteractable
 
 }
 
-               
+
 

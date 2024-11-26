@@ -2,76 +2,60 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Menu : MonoBehaviour, OptionMenu
+public class Menu : MonoBehaviour
 {
-    [SerializeField] private Canvas _canvasGame;
-    [SerializeField] private TMP_Text _menuText;
-    [SerializeField] private Button _saveButton;
-    [SerializeField] private Button _exitButton;
-
-    private Volume _volume;
+    [SerializeField] private GameObject _menu;
+    [SerializeField] private Slider _sliderSensibility;
+    [SerializeField] private Slider _sliderVolume;
+    [SerializeField] private TMP_Text _textSensibility;
+    [SerializeField] private TMP_Text _textVolume;
     private Sensibility _sensibility;
-    private MyPlayer _player;
-    private LoadScene _loadScene;
+    private Volume _volume;
 
-    private void Start()
+    public void Start()
     {
-        _sensibility = FindAnyObjectByType<Sensibility>();
-        _volume = FindAnyObjectByType<Volume>();
-        _player = FindAnyObjectByType<MyPlayer>();
-        _loadScene = FindAnyObjectByType<LoadScene>();
-
-        HideORShowSettings(true);
+        _sensibility = new Sensibility();
+        _volume = new Volume();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            HideORShowSettings(false);
+            ;
+            if (_menu.activeInHierarchy)
+            {
+                _menu.SetActive(false);
+                Time.timeScale = 1;
+                Cursor.lockState = CursorLockMode.Locked;
 
-            _sensibility.SliderSensibility.onValueChanged.AddListener(_sensibility.SensibilityTextUpdate);
-            _volume.SliderVolume.onValueChanged.AddListener(_volume.VolumeTextUpdate);
+                _sliderSensibility.onValueChanged.RemoveListener(TextSensibility);
+                _sliderVolume.onValueChanged.RemoveListener(TextVolume);
+
+                _sensibility.SaveSensibility(_sliderSensibility.value);
+                _volume.SaveVolume(_sliderVolume.value);
+            }
+            else
+            {
+                Debug.Log(2);
+                _menu.SetActive(true);
+                Time.timeScale = 0;
+                Cursor.lockState = CursorLockMode.Confined;
+                _sliderSensibility.onValueChanged.AddListener(TextSensibility);
+                _sliderVolume.onValueChanged.AddListener(TextVolume);
+
+            }
         }
 
     }
 
-    public void ExitSettings()
+    private void TextSensibility(float value)
     {
-        _loadScene.SwitchScene("MainMenu");
+        _textSensibility.text = _sensibility.UpdateSensibilityText(value).ToString();
     }
 
-    public void HideORShowSettings(bool isVisible)
+    private void TextVolume(float value)
     {
-        _canvasGame.gameObject.SetActive(isVisible);
-        _player.CanMove = isVisible;
-
-        _menuText.gameObject.SetActive(!isVisible);
-        _saveButton.gameObject.SetActive(!isVisible);
-        _exitButton.gameObject.SetActive(!isVisible);
-        _sensibility.HideORShowSensibilitySetting(!isVisible);
-        _volume.HideORShowVolumeSetting(!isVisible);
-
-        if (isVisible)
-        {
-            _saveButton.onClick.RemoveAllListeners();
-            _exitButton.onClick.RemoveAllListeners();
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else 
-        {
-            _saveButton.onClick.AddListener(SaveSettings);
-            _exitButton.onClick.AddListener(ExitSettings);
-            Cursor.lockState = CursorLockMode.None;
-        }
-    }
-
-    public void SaveSettings()
-    {
-        _sensibility.SaveSensibility(_sensibility.SliderSensibility.value);
-        _volume.SaveVolume(_volume.SliderVolume.value);
-
-        HideORShowSettings(true);
+        _textSensibility.text = _volume.UpdateVolumeText(value).ToString();
     }
 }
-        

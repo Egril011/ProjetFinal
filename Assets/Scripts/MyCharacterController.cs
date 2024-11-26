@@ -1,5 +1,6 @@
 using KinematicCharacterController;
 using System;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -43,6 +44,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
         // Assign to motor
         Motor.CharacterController = this;
         _animator = GetComponentInChildren<Animator>();
+
     }
 
     /// <summary>
@@ -181,16 +183,15 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     internal void RaycastTryToInteract()
     {
         var cam = Camera.main;
-        //Raycast ou Linecast
 
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfoPlayer, InteractionDistance))
         {
             var interacteble = hitInfoPlayer.collider.GetComponent<IInteractable>();
+
             if (interacteble != null)
             {
                 _animator.SetTrigger("Interaction");
                 interacteble.Interact();
-
             }
         }
         else
@@ -198,6 +199,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
             Debug.Log("No object found within interaction distance");
         }
     }
+
 }
 
 

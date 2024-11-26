@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,12 +13,11 @@ public class ObjectMover : MonoBehaviour, IInteractable
     private string _mouseHorizontal = "Mouse X";
     private string _mouseVertical = "Mouse Y";
     private bool _isLookingObject;
-    
+
     private void Start()
     {
         _myPlayer = FindAnyObjectByType<MyPlayer>();
         _subtitle = FindAnyObjectByType<Subtitle>();
-
     }
 
     public void Update()
@@ -51,20 +51,18 @@ public class ObjectMover : MonoBehaviour, IInteractable
         newPos.y -= 0.5f;
         gameObject.transform.position = newPos;
 
-
-
         _myPlayer.CanMove = false;
         _isLookingObject = true;
-       
-        gameObject.transform.localScale = new Vector3(5, 5, 5);   
+
+        gameObject.transform.localScale = new Vector3(5, 5, 5);
     }
 
-    void MoveObject()
+    private void MoveObject()
     {
         float mouseX = Input.GetAxisRaw(_mouseHorizontal) * Sensibility.PlayerSensibility;
         float mouseY = Input.GetAxisRaw(_mouseVertical) * Sensibility.PlayerSensibility;
 
-        gameObject.transform.Rotate(Vector3.up, mouseX, Space.World);    
-        gameObject.transform.Rotate(Vector3.right, mouseY, Space.Self);  
+        gameObject.transform.Rotate(Vector3.up, mouseY, Space.World);
+        gameObject.transform.Rotate(Vector3.right, mouseX, Space.Self);
     }
 }

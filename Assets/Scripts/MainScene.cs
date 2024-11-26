@@ -1,15 +1,26 @@
 using System;
+using System.Xml.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainScene : MonoBehaviour, OptionMenu
+public class MainScene : MonoBehaviour
 {
     [SerializeField] private string _gameName;
     [SerializeField] private Button _buttonStart;
     [SerializeField] private Button _buttonOption;
     [SerializeField] private Button _buttonSave;
     [SerializeField] private Button _buttonExit;
+
+    [SerializeField] private GameObject _mainMenu;
+    [SerializeField] private GameObject _menuOption;
+
+    [SerializeField] private Slider _sliderSensibility;
+    [SerializeField] private Slider _sliderVolume;
+
+    [SerializeField] private TMP_Text _textSensibilityNb;
+    [SerializeField] private TMP_Text _textVolumeNb;
     [SerializeField] private TMP_Text _text;
 
     private LoadScene _loadScene;
@@ -18,63 +29,83 @@ public class MainScene : MonoBehaviour, OptionMenu
 
     private void Start()
     {
-        _volume = FindAnyObjectByType<Volume>();
-        _sensibility = FindAnyObjectByType <Sensibility>();
-        _loadScene = FindAnyObjectByType<LoadScene>();
+        _volume = new Volume();
+        _loadScene = new LoadScene();
+        _sensibility = new Sensibility();
 
-        HideORShowSettings(true);
+        OptionStart();
     }
 
-    private void OnclickStartGame()
+    private void ShowORHideUI(bool value)
+    {
+        _mainMenu.SetActive(value);
+        _menuOption.SetActive(!value);
+
+        if (value)
+        {
+            _text.text = $"{_gameName}";
+            _buttonStart.onClick.AddListener(LoadGame);
+            _buttonOption.onClick.AddListener(OpenOptionMenu);
+
+            _buttonSave.onClick.RemoveListener(SaveMenuOption);
+            _buttonExit.onClick.RemoveListener(ExitOption);
+
+            _sliderSensibility.onValueChanged.RemoveListener(TextSensibility);
+            _sliderVolume.onValueChanged.RemoveListener(TextVolume);
+        }
+        else
+        {
+            _text.text = "Options";
+            _buttonSave.onClick.AddListener(SaveMenuOption);
+            _buttonExit.onClick.AddListener(ExitOption);
+
+            _buttonStart.onClick.RemoveListener(LoadGame);
+            _buttonOption.onClick.RemoveListener(OpenOptionMenu);
+
+            _sliderSensibility.onValueChanged.AddListener(TextSensibility);
+            _sliderVolume.onValueChanged.AddListener(TextVolume);
+        }
+    }
+
+    private void TextVolume(float value)
+    {
+        _textVolumeNb.text = _volume.UpdateVolumeText(value).ToString();
+    }
+
+    private void TextSensibility(float value)
+    {
+        _textSensibilityNb.text = _sensibility.UpdateSensibilityText(value).ToString();
+    }
+
+    private void ExitOption()
+    {
+        ShowORHideUI(true);
+    }
+
+    private void SaveMenuOption()
+    {
+        _sensibility.SaveSensibility(_sliderSensibility.value);
+        _volume.SaveVolume(_sliderVolume.value);
+    }
+
+    private void LoadGame()
     {
         _loadScene.SwitchScene("Game");
     }
 
-    private void OnclickOption()
+    private void OpenOptionMenu()
     {
-        HideORShowSettings(false);
-
-        _sensibility.SliderSensibility.onValueChanged.AddListener(_sensibility.SensibilityTextUpdate);
-
-        _volume.SliderVolume.onValueChanged.AddListener(_volume.VolumeTextUpdate); 
-    }
-    public void ExitSettings()
-    {
-        HideORShowSettings(true);
+        ShowORHideUI(false);
     }
 
-    public void HideORShowSettings(bool isVisible)
+    private void OptionStart()
     {
-       _text.text = $"{_gameName}";
-       _buttonStart.gameObject.SetActive(isVisible);
-       _buttonOption.gameObject.SetActive(isVisible);
-       
-       _buttonExit.gameObject.SetActive(!isVisible);
-       _buttonSave.gameObject.SetActive(!isVisible);
+        _sliderSensibility.value = Sensibility.PlayerSensibility / 100.0f;
+        _sliderVolume.value = Volume.PlayerVolume / 100.0f;
 
-       _sensibility.HideORShowSensibilitySetting(!isVisible);
-       _volume.HideORShowVolumeSetting(!isVisible);
+        _textSensibilityNb.text = _sensibility.UpdateSensibilityText(_sliderSensibility.value).ToString();
+        _textVolumeNb.text = _volume.UpdateVolumeText(_sliderVolume.value).ToString();
 
-        if (isVisible)
-        {
-            _buttonStart.onClick.AddListener(OnclickStartGame);
-            _buttonOption.onClick.AddListener(OnclickOption);
-        }
-        else
-        {
-            _text.text = "Option";
-            _buttonStart.onClick.RemoveAllListeners();
-            _buttonOption.onClick.RemoveAllListeners();
-
-            _buttonSave.onClick.AddListener(SaveSettings);
-            _buttonExit.onClick.AddListener(ExitSettings);
-        }
-        
-    }
-
-    public void SaveSettings()
-    {
-        _sensibility.SaveSensibility(_sensibility.SliderSensibility.value);
-        _volume.SaveVolume(_volume.SliderVolume.value);
+        ShowORHideUI(true);
     }
 }

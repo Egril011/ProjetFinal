@@ -14,7 +14,7 @@ public class MyPlayer : MonoBehaviour
     private const string MouseScrollInput = "Mouse ScrollWheel";
     private const string HorizontalInput = "Horizontal";
     private const string VerticalInput = "Vertical";
-    public bool CanMove {  get; set; } = true;
+    public bool CanMove { get; set; } = true;
 
     private void Start()
     {
@@ -39,7 +39,6 @@ public class MyPlayer : MonoBehaviour
         {
             Character.RaycastTryToInteract();
         }
-
         HandleCharacterInput();
     }
 

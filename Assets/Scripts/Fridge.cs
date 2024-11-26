@@ -11,7 +11,7 @@ public class Fridge : MonoBehaviour, IInteractable
 
     private bool _hasOpenTopDoorFridge;
     private bool _hasOpenBottomDoorFridge;
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -76,7 +76,7 @@ public class Fridge : MonoBehaviour, IInteractable
         {
             CloseBottomDoor();
         }
-        
+
     }
 
     private void CloseTopDoor()
@@ -109,19 +109,20 @@ public class Fridge : MonoBehaviour, IInteractable
         _hasOpenBottomDoorFridge = true;
         _bottomLight.enabled = true;
         _bottomDoor.enabled = false;
-    } 
+    }
 
     private void CheckDoor()
     {
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        
-        if (Physics.Raycast(ray,out RaycastHit hit, 5))
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 5))
         {
             Debug.Log(hit.collider.name);
-            Debug.DrawLine(ray.origin, hit.point,Color.red, 10000);
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 10000);
+
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Fridge"))
             {
-               return;
+                return;
             }
         }
         else

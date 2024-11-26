@@ -6,11 +6,8 @@ using UnityEngine.ProBuilder.MeshOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Sensibility : MonoBehaviour
+public class Sensibility
 {
-    [SerializeField] public Slider SliderSensibility;
-    [SerializeField] private TMP_Text _sensibilityNb;
-    [SerializeField] private TMP_Text _sensibilityText;
     private float _maxValue = 100.0f;
 
     public static int PlayerSensibility
@@ -22,27 +19,15 @@ public class Sensibility : MonoBehaviour
             PlayerPrefs.Save();
         }
     }
-        
-    private void Start()
-    {
-        SliderSensibility.value = PlayerSensibility / _maxValue;
-        _sensibilityNb.text = PlayerSensibility.ToString();
-    }
-
-    public void SensibilityTextUpdate(float slideValue)
-    {
-        _sensibilityNb.text = Mathf.RoundToInt(slideValue * _maxValue).ToString();
-    }
 
     public void SaveSensibility(float value)
     {
         PlayerSensibility = Mathf.RoundToInt(value * _maxValue);
     }
 
-    public void HideORShowSensibilitySetting(bool isVisible)
+    public int UpdateSensibilityText(float slideValue)
     {
-        SliderSensibility.gameObject.SetActive(isVisible);
-        _sensibilityNb.gameObject.SetActive(isVisible);
-        _sensibilityText.gameObject.SetActive(isVisible);
+        int value = Mathf.RoundToInt(slideValue * _maxValue);
+        return value;
     }
 }
