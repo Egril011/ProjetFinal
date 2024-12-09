@@ -37,7 +37,6 @@ public class Menu : MonoBehaviour
             }
             else
             {
-                Debug.Log(2);
                 _menu.SetActive(true);
                 Time.timeScale = 0;
                 Cursor.lockState = CursorLockMode.Confined;

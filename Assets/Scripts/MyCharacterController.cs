@@ -3,6 +3,7 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public struct PlayerCharacterInputs
@@ -37,6 +38,7 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
     private Vector3 _lookInputVector;
     [SerializeField] Animator _animator;
     private RaycastHit hitInfoPlayer;
+    [SerializeField] Image _hand;
 
 
     private void Start()
@@ -197,6 +199,30 @@ public class MyCharacterController : MonoBehaviour, ICharacterController
         else
         {
             Debug.Log("No object found within interaction distance");
+        }
+    }
+
+    private void Update()
+    {
+        ShowUIHand();
+    }
+
+    private void ShowUIHand()
+    {
+        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, InteractionDistance))
+        {
+            var interacteble = hit.collider.GetComponent<IInteractable>();
+
+            if (interacteble != null)
+            {
+                _hand.gameObject.SetActive(true);
+            }
+            else
+            {
+                _hand.gameObject.SetActive(false);
+            }
         }
     }
 

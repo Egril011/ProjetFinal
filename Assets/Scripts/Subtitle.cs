@@ -33,12 +33,32 @@ public class Subtitle : MonoBehaviour
         subtitle.enabled = false;
     }
 
-    public void Message(string text)
+    public void Subtitles(string text)
     {
         background.enabled = true;
         subtitle.enabled = true;
 
         subtitle.text = text;
+    }
+
+    public IEnumerator SubtitlesWordPerWord(string text)
+    {
+        Debug.Log(2);
+        background.enabled = true;
+        subtitle.enabled = true;
+
+        subtitle.text = "";
+
+        foreach (char lettre in text)
+        {
+            subtitle.text += lettre;
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        subtitle.text = " ";
+        HideMessage();
     }
 
     public void HideMessage()

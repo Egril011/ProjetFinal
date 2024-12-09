@@ -15,37 +15,39 @@ public class SafeBox : MonoBehaviour, IInteractable
     private string _mouseHorizontal = "Mouse X";
     private int totalNumbers = 100;
     private bool _useSafeBox;
+    private bool _successCode;
     private int _index;
     private int _currentNumber;
     private MyPlayer _player;
+    private Flashlight _flashlight;
 
     private void Start()
     {
         _player = FindAnyObjectByType<MyPlayer>();
+        _flashlight = FindAnyObjectByType<Flashlight>();
     }
 
     private void Update()
     {
-        if (_useSafeBox)
+        if (_useSafeBox && !_successCode)
         {
+            _flashlight.Intesity = 0;
+
             if (Input.GetMouseButton(0))
             {
                 float x = Input.GetAxisRaw(_mouseHorizontal) * 2;
                 _passcodeGameObject.transform.Rotate(0f, 0f, x);
 
-                // Get the current angle of the roulette
                 float currentAngle = Mathf.Repeat(_passcodeGameObject.transform.rotation.eulerAngles.z, 360f);
 
-                // Compute the segment size
                 float segment = 360f / totalNumbers;
 
-                // Map the angle to a number
                 _currentNumber = Mathf.FloorToInt(currentAngle / segment);
 
-                // Clamp the number to ensure it stays within range [0, totalNumbers - 1]
                 _currentNumber = Mathf.Clamp(_currentNumber, 0, totalNumbers - 1);
-            }
 
+
+            }
             if (Input.GetMouseButtonUp(0))
             {
                 if (_currentNumber == _code[_index])
@@ -60,7 +62,9 @@ public class SafeBox : MonoBehaviour, IInteractable
                         _secondCamera.gameObject.SetActive(false);
                         _light.gameObject.SetActive(false);
                         _player.CanMove = true;
-                        GetComponent<SafeBox>().enabled = false;
+                        _useSafeBox = false;
+                        _successCode = true;
+                        _flashlight.Intesity = 100;
                         _collider.enabled = false;
                     }
                 }
@@ -72,15 +76,25 @@ public class SafeBox : MonoBehaviour, IInteractable
                 _light.gameObject.SetActive(false);
                 _player.CanMove = true;
                 _useSafeBox = false;
+                _flashlight.Intesity = 100;
             }
         }
     }
 
+
+
     public void Interact()
     {
-        _secondCamera.gameObject.SetActive(true);
-        _useSafeBox = true;
-        _light.gameObject.SetActive(true);
-        _player.CanMove = false;
+        if (_successCode)
+        {
+            return;
+        }
+        else
+        {
+            _secondCamera.gameObject.SetActive(true);
+            _useSafeBox = true;
+            _light.gameObject.SetActive(true);
+            _player.CanMove = false;
+        }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Volume
 {
     private float _maxValue = 100.0f;
+    internal object profile;
 
     public static int PlayerVolume
     {

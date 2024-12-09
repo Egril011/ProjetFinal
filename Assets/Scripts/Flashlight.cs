@@ -1,15 +1,17 @@
+using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Flashlight : MonoBehaviour, IInteractable
 {
     [SerializeField] private Camera _cam;
-    [SerializeField] private LayerMask _wallLayer;
+    [SerializeField] private LayerMask _objectLayer;
     [SerializeField] private int _distanceFromWalls = 1;
     private Light _flashlight;
-    private float _intesity = 100;
+    public float Intesity = 50;
     public bool FlaslightOn { get; private set; }
     public bool HasPickedUp { get; private set; }
+    private bool _color;
 
     private void Start()
     {
@@ -29,7 +31,23 @@ public class Flashlight : MonoBehaviour, IInteractable
 
                 if (FlaslightOn)
                 {
-                    _flashlight.intensity = _intesity;
+                    _flashlight.intensity = Intesity;
+                }
+            }
+
+            if (Input.GetMouseButtonDown(2) && FlaslightOn)
+            {
+                if (_color)
+                {
+                    Debug.Log(1);
+                    Color color = new Color(191f / 255f, 90f / 255f, 255f / 255f, 1f);
+                    _flashlight.color = color;
+                    _color = false;
+                }
+                else if (!_color) 
+                {
+                    _flashlight.color = Color.white;
+                    _color = true;
                 }
             }
 
@@ -52,7 +70,7 @@ public class Flashlight : MonoBehaviour, IInteractable
         RaycastHit hit;
         Ray ray = new Ray(_cam.transform.position, _cam.transform.forward);
 
-        if (Physics.Raycast(ray, out hit, _distanceFromWalls, _wallLayer))
+        if (Physics.Raycast(ray, out hit, _distanceFromWalls, _objectLayer))
         {
             _flashlight.enabled = false;
         }

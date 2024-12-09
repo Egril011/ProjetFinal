@@ -25,7 +25,7 @@ public class ObjectMover : MonoBehaviour, IInteractable
         if (_isLookingObject)
         {
             MoveObject();
-            _subtitle.Message("Appuie sur \"Space\" pour quitter");
+            _subtitle.Subtitles("Appuie sur \"Space\" pour quitter");
 
             if (Input.GetKey(KeyCode.Space))
             {
@@ -62,7 +62,7 @@ public class ObjectMover : MonoBehaviour, IInteractable
         float mouseX = Input.GetAxisRaw(_mouseHorizontal) * Sensibility.PlayerSensibility;
         float mouseY = Input.GetAxisRaw(_mouseVertical) * Sensibility.PlayerSensibility;
 
-        gameObject.transform.Rotate(Vector3.up, mouseY, Space.World);
-        gameObject.transform.Rotate(Vector3.right, mouseX, Space.Self);
+        gameObject.transform.Rotate(Vector3.down, -mouseX, Space.World);
+        gameObject.transform.Rotate(Vector3.right, -mouseY, Space.Self);
     }
 }
